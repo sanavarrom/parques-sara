@@ -75,9 +75,11 @@ class JuegoCLI():
 
     def __init__(self):
         self.prompt_end = "> "
+        self.game = Game()
+        # used for nicer print
         self.prompted_for_peón = False
         # saving game data
-        self.record_maker = ()
+        self.record_maker = CreadorRegistro()
         # getting game data
         self.record_runner = None
 
