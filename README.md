@@ -1,3 +1,8 @@
+SARA VALENTINA NAVARRO
+
+ENLASE VIDEO(           )
+
+
 # Juego de Parqués en Consola
 
 Este es un juego de Parqués (basado en Ludo) implementado en Python para jugar en la consola. Permite jugar contra la computadora o con otros jugadores.
