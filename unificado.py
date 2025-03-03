@@ -2,10 +2,9 @@ import pickle
 
 
 class RegistroJuego():
-    '''provide recoded game data
-    iterating over instance
-    yield valor_dado and index
-    '''
+   #Proporciona datos de una partida grabada  
+    Iterando sobre la instancia  
+    Devuelve valor_dado e índice
 
     def __init__(self, file_obj):
         self.file_obj = file_obj
@@ -14,12 +13,12 @@ class RegistroJuego():
         self.historial_juego = data[1]
 
     def obtener_jugadores(self, func=None):
-        '''
-        return Jugador object
+    
+       '''return Jugador object
         recreated from a list
         func is callable which player
-        may need for choice delegation
-        '''
+        may need for choice delegation'''
+        
         res = []
         for colour, name, is_computer in self.players:
             if is_computer:
@@ -37,19 +36,19 @@ class RegistroJuego():
 
 
 class CreadorRegistro():
-    '''guardar game data
-    as a nested list which is
-    guardard with pickle
-    '''
+'''Guardar datos de la partida  
+    como una lista anidada,  
+    la cual se guarda con pickle'''
+
 
     def __init__(self):
         self.players = []
         self.historial_juego = []
 
     def add_player(self, player_obj):
-        '''Accept Jugador object and
-        it guardar NOT as object rather as a list
-        '''
+       '''Acepta un objeto Jugador y  
+    lo guarda NO como un objeto, sino como una lista'''
+
         if player_obj.choose_peón_delegate is None:
             is_computer = True
         else:
@@ -85,11 +84,11 @@ class JuegoCLI():
 
     def validar_entrada(self, prompt, desire_type, allawed_input=None,
                        error_mess="Invalid Option!", str_len=None):
-        '''
-        loop while receive correct value
-        param allowed_input can be list of allowed values
-        param str_len is two sized tuple if min and max
-        '''
+      '''
+    Bucle que se repite hasta recibir un valor correcto  
+    El parámetro allowed_input puede ser una lista de valores permitidos  
+    El parámetro str_len es una tupla de dos valores (mínimo y máximo)
+'''
         prompt += linesep + self.prompt_end
         while True:
             choice = input(prompt)
@@ -126,10 +125,12 @@ class JuegoCLI():
 
 
     def prompt_for_player(self):
-        ''' get player attributes from input,
-        initial player instance and
-        add player to the game
-        '''
+      '''
+    Obtiene los atributos del jugador desde la entrada,  
+    inicializa una instancia de jugador y  
+    agrega el jugador al juego.
+'''
+
         available_colours = self.game.get_available_colours()
         text = linesep.join(["escoja tipo de jugador",
                              "0 - computador",
@@ -182,11 +183,13 @@ class JuegoCLI():
                 print("Jugador añadido")
 
     def prompt_choose_peón(self):
-        '''used when player (human) has more than
-        one possible peón to move.
-        This method is pass as a callable during
-        player instantiation
         '''
+    Se usa cuando un jugador (humano) tiene más de  
+    un peón posible para mover.  
+    Este método se pasa como un callable  
+    durante la instanciación del jugador.
+'''
+
         text = present_6_die_name(self.game.valor_dado,
                                   str(self.game.curr_player))
         text += linesep + "has more than one possible peóns to move."
@@ -214,7 +217,7 @@ class JuegoCLI():
         print()
 
     def print_info_after_turn(self):
-        '''it used game attributes to print info'''
+        '''usa los atributos del juego para imprimir la info'''
         peóns_id = [peón.id for peón in self.game.peones_permitidos]
         # nicer print of dice
         message = present_6_die_name(self.game.valor_dado,
@@ -247,9 +250,12 @@ class JuegoCLI():
         print(self.game.get_board_pic())
 
     def run_recorded_game(self):
-        '''get history of game (valor_dado
-        and  index's allowed peón) from 
-        record_runner in order to replay game'''
+       '''
+    Obtiene el historial de la partida  
+    (valor del dado y el peón permitido por índice)  
+    desde record_runner para volver a jugar la partida.
+'''
+
         self.cargar_recorded_players()
         self.print_players_info()
         self.prompt_to_continue()
@@ -261,10 +267,9 @@ class JuegoCLI():
             self.print_board()
 
     def continue_recorded_game(self):
-        '''move forward the game by calling 
-        jugar_turno method to the moment 
-        where game was interrupted. 
-        '''
+        ''' Avanza el juego llamando al método jugar_turno  
+    hasta el momento en que la partida fue interrumpida.'''
+
         self.cargar_recorded_players()
         self.record_players()
         for valor_dado, index in self.record_runner:
@@ -281,9 +286,10 @@ class JuegoCLI():
             self.record_maker.add_player(player)
 
     def cargar_recorded_players(self):
-        '''get recorded (guardar) players from
-        recorder and put them in game
-        '''
+      '''  Obtiene los jugadores guardados  
+    desde el registro y los agrega al juego.'''
+
+
         if self.record_runner is None:
             file_descr = self.prompt_for_file()
             self.record_runner = RegistroJuego(file_descr)
@@ -298,9 +304,9 @@ class JuegoCLI():
         self.record_players()
 
     def play_game(self):
-        '''mainly calling jugar_turno
-        Game's method while game finished
-        '''
+       '''  Principalmente llama al método jugar_turno  
+    del juego mientras la partida no haya terminado.'''
+
         try:
             while not self.game.finished:
                 self.game.jugar_turno()
@@ -321,7 +327,7 @@ class JuegoCLI():
 
 
     def iniciar(self):
-        '''main method, iniciaring cli'''
+        'metodo principal, iniciar cli'
         print()
         try:
             choice = self.get_user_initial_choice()
@@ -359,18 +365,22 @@ Pawn = namedtuple("Pawn", "index colour id")
 
 
 class Jugador():
-    '''Knows (holds) his peóns,
-     also know his colour
-    and choose which peón to move
-    if more than one are possible
-    '''
+
+    "Conoce (almacena) sus peones,  
+    también conoce su color  
+    y elige qué peón mover  
+    si hay más de uno posible."
+
+
     def __init__(self, colour, name=None, choose_peón_delegate=None):
-        '''choose_peón_delegate is callable.
-        if choose_peón_delegate is not None it is called
-        with argument list of available peóns to move
-        and expect chosen index from this list
-        if it is None (means computer) random index is chosen
-        '''
+  
+  '''Si choose_peón_delegate no es None, se llama  
+    con una lista de peones disponibles para mover  
+    y se espera que devuelva el índice elegido'''
+   ''' Si es None (lo que significa que es la computadora),  
+    se elige un índice aleatorio'''
+
+
         self.colour = colour
         self.choose_peón_delegate = choose_peón_delegate
         self.name = name
@@ -386,9 +396,11 @@ class Jugador():
         return "{}({})".format(self.name, self.colour)
 
     def choose_peón(self, peóns):
-        '''Delegate choice to choose_peón_delegate func attribute
-        if it is not None
-        '''
+
+  '''Delegar la elección al atributo de función  
+    choose_peón_delegate si no es None.'''
+
+
         if len(peóns) == 1:
             index = 0
         elif len(peóns) > 1:
@@ -400,14 +412,14 @@ class Jugador():
 
 
 class Tablero():
-    '''
-    Knows where are peóns.
-    Pawns are assigned with position numbers.
-    Can move (change position number) peón.
-    Knows other things like
-    what distance peón must past to reach end.
-    It just board. It does not know rules of the game.
-    '''
+   
+   #Sabe dónde están los peones.  
+    #Los peones están asignados a números de posición.  
+    #Puede mover (cambiar el número de posición) un peón.  
+   # Conoce otras cosas, como la distancia que un peón  
+    #debe recorrer para llegar al final.Es solo el tablero. No conoce las reglas del juego 
+
+
 
     # common (sharojo) squares for all peóns
     BOARD_SIZE = 56
@@ -493,7 +505,7 @@ class Tablero():
         self.set_peón(peón, position)
 
     def does_peón_reach_end(self, peón):
-        '''if peón must leave game'''
+      #si el peón se debe salir
         common_poss, private_poss = self.peóns_possiotion[peón]
         if private_poss == self.BOARD_COLOUR_SIZE:
             return True
@@ -507,10 +519,6 @@ class Tablero():
                 if position == curr_postion]
 
     def paint_board(self):
-        '''painter object expect dict of
-        key - occupied positions and
-        value - list of peóns on that position
-        '''
         positions = {}
         for peón, position in self.peóns_possiotion.items():
             common, private = position
@@ -530,12 +538,7 @@ class Die():
 
 
 class Game():
-    '''Knows the rules of the game.
-    Knows for example what to do when 
-    one peón reach another
-    or peón reach end or 
-    player roll six and so on
-    '''
+    #se conoce las reglas del juego
 
     def __init__(self):
         self.players = deque()
@@ -568,10 +571,11 @@ class Game():
         return sorted(available)
 
     def _get_next_turn(self):
-        '''Get next player's turn.
-        It is underscore because if called 
-        outside the class will break order
-        '''
+     
+    #Obtener el turno del siguiente jugador.  
+    #Tiene un guion bajo porque, si se llama fuera de la clase, rompería el orden.
+
+
         if not self.valor_dado == Die.MAX:
             self.players.rotate(-1)
         return self.players[0]
@@ -583,9 +587,12 @@ class Game():
                 return peón
 
     def get_peones_permitidos_to_move(self, player, valor_dado):
-        ''' return all peóns of a player which rolled value
-        from die allowed to move the peón
-        '''
+     
+    #Devuelve todos los peones de un jugador  
+    cuyo valor obtenido en el dado  
+    les permite moverse.
+
+
         peones_permitidos = []
         if valor_dado == Die.MAX:
             peón = self.get_peón_from_board_pool(player)
@@ -608,10 +615,12 @@ class Game():
                 self.jog_peóns.append(p)
 
     def _make_move(self, player, peón):
-        '''tell the board to move peón.
-        After move ask board if peón reach end or
-        jog others peón. Check if peón and player finished.
-        '''
+   
+    #Ordena al tablero que mueva un peón. Después del movimiento, pregunta al tablero  
+    # si el peón llegó al final o si hizo retroceder a otros peones.  
+   # Verifica si el peón y el jugador han terminado.
+
+
         if self.valor_dado == Die.MAX and\
                 self.board.is_peón_on_board_pool(peón):
             self.board.put_peón_on_iniciaring_square(peón)
@@ -630,13 +639,14 @@ class Game():
             self._jog_foreign_peón(peón)
 
     def jugar_turno(self, ind=None, rolled_val=None):
-        '''this is main method which must be used to play game.
-        Method ask for next player's turn, roll die, ask player
-        to choose peón, move peón.
-        ind and rolled_val are suitable to be used when
-        game must be replicated (recorded)
-        ind is chosen index from allowed peóns
-        '''
+ 
+   # Este es el método principal que se debe usar para jugar.  
+   # El método solicita el turno del siguiente jugador,  
+    lanza el dado, pide al jugador que elija un peón y lo mueve.  
+      
+   # "ind" y "rolled_val" son útiles cuando se necesita replicar (grabar) la partida.  
+    # "ind" es el índice elegido de los peones permitidos.
+
         self.jog_peóns = []
         self.curr_player = self._get_next_turn()
         if rolled_val is None:
@@ -699,9 +709,13 @@ BOARD_TMPL = [['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', 
             ['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '|', ' ', '#', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', '|', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'], 
             ['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#']]
 
-# List of two sized tuples. The content of tuple correspond
-# with address of matrix BOARD_TMPL. While list index correspond
-# with peón share position from board class
+# Lista de tuplas de dos elementos.  
+# El contenido de la tupla corresponde  
+# con la dirección de la matriz BOARD_TMPL.  
+# Mientras que el índice de la lista  
+# corresponde con la posición compartida del peón  
+# en la clase del tablero.
+
 CODE_COMMON_SQUARES = [
     (),  # 0 index not used
     (14, 2), (14, 8), (14, 14), (14, 20), (14, 26), (14, 32), (14, 38),
@@ -714,9 +728,11 @@ CODE_COMMON_SQUARES = [
     (18, 32), (18, 26), (18, 20), (18, 14), (18, 8), (18, 2), (16, 2)
 ]
 
-# tuple correspond with address of matrix BOARD_TMPL
-# color correspond to peón colour
-# index of colour's list correspond with peón private (final) position
+# La tupla corresponde a la dirección de la matriz BOARD_TMPL.  
+# El color corresponde al color del peón.  
+# El índice de la lista de colores  
+# corresponde con la posición privada (final) del peón.
+
 CODE_COLOUR_SQUARES = {
     'amarrillo': [(), (16, 8), (16, 14), (16, 20), (16, 26), (16, 32), (16, 38)],
     'azul': [(), (4, 44), (6, 44), (8, 44), (10, 44), (12, 44), (14, 44)],
@@ -724,9 +740,11 @@ CODE_COLOUR_SQUARES = {
     'verde': [(), (28, 44), (26, 44), (24, 44), (22, 44), (20, 44), (18, 44)]
 }
 
-# tuple correspond with address of matrix BOARD_TMPL
-# color correspond to peón colour
-# index of colour's list correspond with peón initial position
+# La tupla corresponde a la dirección de la matriz BOARD_TMPL.  
+# El color corresponde al color del peón.  
+# El índice de la lista de colores  
+# corresponde con la posición inicial del peón.
+
 CODE_POOL_PLACES = {
     'amarrillo': [(), (6, 14), (6, 19), (8, 14), (8, 19)],
     'azul': [(), (6, 71), (6, 76), (8, 71), (8, 76)],
@@ -765,10 +783,12 @@ class PaintTablero():
                 self._place_peón(peón, position, index)
 
     def paint(self, position):
-        '''expect dict of
-        key - occupied positions and
-        value - list of peóns on that position
-        '''
+   
+   # Se espera un diccionario con:  
+    - Clave: posiciones ocupadas.  
+    - Valor: lista de peones en esa posición.
+
+
         self.board_tmpl_curr = deepcopy(BOARD_TMPL)
         self._place_peóns(position)
         board_paint = [''.join(row_list) for row_list in self.board_tmpl_curr]
@@ -777,9 +797,11 @@ class PaintTablero():
 
 
 def present_6_die_name(number, name):
-    '''nicer print of die and
-    name of the player
-    '''
+
+   # Impresión más clara del dado  
+    #y el nombre del jugador.
+
+
     hor_line = 9 * '-'
     sps = 37 * ' '
     hor_line = sps + hor_line
