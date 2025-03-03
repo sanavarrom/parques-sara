@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from unificado import JuegoCLI
+from unificado2 import JuegoCLI
 
 
 JuegoCLI().iniciar()
