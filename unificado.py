@@ -3,8 +3,8 @@ import pickle
 
 class RegistroJuego():
    #Proporciona datos de una partida grabada  
-    Iterando sobre la instancia  
-    Devuelve valor_dado e índice
+    #Iterando sobre la instancia  
+   # Devuelve valor_dado e índice
 
     def __init__(self, file_obj):
         self.file_obj = file_obj
