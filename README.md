@@ -1,6 +1,6 @@
 SARA VALENTINA NAVARRO
 
-ENLACE VIDEO(           )
+
 
 
 # Juego de Parqués en Consola
