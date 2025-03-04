@@ -467,7 +467,7 @@ class Tablero():
     '''
 
     # common (sharojo) squares for all peóns
-    BOARD_SIZE = 56
+    BOARD_SIZE = 68
 
     # guardar (private) positions (squares) for each colour
     # This is squares just before peón finished
